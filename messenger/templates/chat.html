@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var socket = io.connect('http://127.0.0.1:5000');
+            socket.on('connect', function() {
+                socket.send(' has connected!');
+            });
+            socket.on('message', function(msg) {
+                $(".media-list").append('<li class="message">' + '<span id="nickname">{{ current_user.username }}</span>: ' + msg + '</li>');
+            });
+            $('#sendMessage').on('click', function() {
+                socket.send($('#messageText').val());
+                $('#messageText').val('');
+            });
+        });
+    </script>
+    <div class="container">
+    <div class="row " style="padding-top:40px;">
+        <h3 class="text-center">The final project. Awesome chat built on Flask and SocketIO</h3>
+
+        <div class="col-md-12">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <strong><span class="glyphicon glyphicon-list"></span>Chat History</strong>
+                </div>
+                <div class="panel-body fixed-panel">
+                    <ul class="media-list">
+
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Enter Message" id="messageText" autofocus/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info" type="button" id="sendMessage">SEND <span class="glyphicon glyphicon-send"></span></button>
+                                    </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
